@@ -1,16 +1,42 @@
-# React + Vite
+# GerenciaApp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web desenvolvida em **React** que implementa navegação com React Router, formulário com validação, listagem dinâmica e integração com API REST.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 18
+- React Router Dom v6
+- Vite
+- JSONPlaceholder API
 
-## React Compiler
+## 📁 Estrutura de Pastas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⚙️ Como executar
 
-## Expanding the ESLint configuration
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/gerencia-app.git
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Acesse a pasta
+cd gerencia-app
+
+# Instale as dependências
+npm install
+
+# Inicie o projeto
+npm run dev
+```
+
+Acesse http://localhost:5173
+
+## 📋 Funcionalidades
+
+- **Início** — Dashboard com visão geral e estatísticas dinâmicas
+- **Cadastro** — Formulário controlado com validação em tempo real (onChange, onBlur, onSubmit, preventDefault)
+- **Listagem** — Tabela de usuários com busca e remoção + Posts da API com loading e tratamento de erro
+- **Estado Compartilhado** — Context API sincroniza dados entre todas as páginas
+- **API REST** — Integração com JSONPlaceholder (https://jsonplaceholder.typicode.com)
+
+## 👤 Autor
+
+Davi Serlio Lopes De Souza - https://github.com/daviserlio/gerencia-app.git
