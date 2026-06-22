@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Cadastro from './pages/Cadastro'
 import Listagem from './pages/Listagem'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
@@ -13,7 +14,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/listagem" element={<Listagem />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>

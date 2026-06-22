@@ -1,0 +1,32 @@
+.notfound-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+  gap: 1rem;
+}
+
+.notfound-code {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(6rem, 20vw, 10rem);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  opacity: 0.2;
+}
+
+.notfound-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.notfound-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
