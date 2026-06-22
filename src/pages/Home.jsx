@@ -72,7 +72,7 @@ export default function Home() {
 
   const stats = [
     { label: 'Usuários cadastrados', value: usuarios.length, icon: '👤', to: '/listagem' },
-    { label: 'Posts carregados via API', value: posts.length, icon: '📄', to: '/listagem' },
+    { label: 'Último cadastro', value: usuarios.length > 0 ? usuarios[0].nome : '—', icon: '🕐', to: '/listagem' },
   ]
 
   return (
