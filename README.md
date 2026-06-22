@@ -39,4 +39,4 @@ Acesse http://localhost:5173
 
 ## 👤 Autor
 
-Davi Serlio Lopes De Souza - https://github.com/daviserlio/gerencia-app.git
+Davi Serlio Lopes De Souza — https://github.com/daviserlio/gerencia-app.git
