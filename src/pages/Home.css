@@ -135,3 +135,65 @@
   color: var(--text-secondary);
   margin: 0;
 }
+
+.pizza-card { grid-column: span 1; }
+
+.pizza-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.pizza-svg {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.pizza-legenda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.legenda-cor {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.legenda-dep {
+  color: var(--text-secondary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.legenda-qtd {
+  color: var(--accent);
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+}
+
+.pizza-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  width: 100%;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}
