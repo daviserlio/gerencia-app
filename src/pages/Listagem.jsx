@@ -8,24 +8,43 @@ export default function Listagem() {
   const [aba, setAba] = useState('usuarios')
   const [busca, setBusca] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [ordenacao, setOrdenacao] = useState({ coluna: null, direcao: 'asc' })
 
   useEffect(() => {
-    if (aba === 'api' && posts.length === 0 && !loadingPosts) {
-      buscarPosts()
-    }
+    if (aba === 'api' && posts.length === 0 && !loadingPosts) buscarPosts()
   }, [aba])
 
-  const usuariosFiltrados = usuarios.filter(
-    (u) =>
+  function toggleOrdenacao(coluna) {
+    setOrdenacao((prev) =>
+      prev.coluna === coluna
+        ? { coluna, direcao: prev.direcao === 'asc' ? 'desc' : 'asc' }
+        : { coluna, direcao: 'asc' }
+    )
+  }
+
+  function getIcone(coluna) {
+    if (ordenacao.coluna !== coluna) return ' ↕'
+    return ordenacao.direcao === 'asc' ? ' ↑' : ' ↓'
+  }
+
+  const usuariosFiltrados = usuarios
+    .filter((u) =>
       u.nome.toLowerCase().includes(busca.toLowerCase()) ||
       u.email.toLowerCase().includes(busca.toLowerCase()) ||
       (u.cargo && u.cargo.toLowerCase().includes(busca.toLowerCase()))
-  )
+    )
+    .sort((a, b) => {
+      if (!ordenacao.coluna) return 0
+      const valA = (a[ordenacao.coluna] || '').toLowerCase()
+      const valB = (b[ordenacao.coluna] || '').toLowerCase()
+      if (valA < valB) return ordenacao.direcao === 'asc' ? -1 : 1
+      if (valA > valB) return ordenacao.direcao === 'asc' ? 1 : -1
+      return 0
+    })
 
-  const postsFiltrados = posts.filter(
-    (p) =>
-      p.title.toLowerCase().includes(busca.toLowerCase()) ||
-      String(p.id).includes(busca)
+  const postsFiltrados = posts.filter((p) =>
+    p.title.toLowerCase().includes(busca.toLowerCase()) ||
+    String(p.id).includes(busca)
   )
 
   return (
@@ -41,26 +60,13 @@ export default function Listagem() {
 
         <div className="listagem-controls">
           <div className="abas">
-            <button
-              className={`aba-btn ${aba === 'usuarios' ? 'aba-ativa' : ''}`}
-              onClick={() => { setAba('usuarios'); setBusca('') }}
-            >
-              Usuários{' '}
-              <span className={`aba-count ${aba === 'usuarios' ? 'ativa' : ''}`}>
-                {usuarios.length}
-              </span>
+            <button className={`aba-btn ${aba === 'usuarios' ? 'aba-ativa' : ''}`} onClick={() => { setAba('usuarios'); setBusca('') }}>
+              Usuários <span className={`aba-count ${aba === 'usuarios' ? 'ativa' : ''}`}>{usuarios.length}</span>
             </button>
-            <button
-              className={`aba-btn ${aba === 'api' ? 'aba-ativa' : ''}`}
-              onClick={() => { setAba('api'); setBusca('') }}
-            >
-              Posts da API{' '}
-              <span className={`aba-count ${aba === 'api' ? 'ativa' : ''}`}>
-                {posts.length}
-              </span>
+            <button className={`aba-btn ${aba === 'api' ? 'aba-ativa' : ''}`} onClick={() => { setAba('api'); setBusca('') }}>
+              Posts da API <span className={`aba-count ${aba === 'api' ? 'ativa' : ''}`}>{posts.length}</span>
             </button>
           </div>
-
           <input
             type="search"
             placeholder={aba === 'usuarios' ? 'Buscar por nome, e-mail ou cargo...' : 'Buscar por título ou ID...'}
@@ -76,12 +82,8 @@ export default function Listagem() {
             {usuariosFiltrados.length === 0 ? (
               <div className="empty-state">
                 <div className="empty-icon">{busca ? '🔍' : '👤'}</div>
-                <h3 className="empty-title">
-                  {busca ? 'Nenhum resultado encontrado' : 'Nenhum usuário cadastrado ainda'}
-                </h3>
-                <p className="empty-desc">
-                  {busca ? 'Tente outro termo de busca.' : 'Vá até Cadastro para adicionar o primeiro usuário.'}
-                </p>
+                <h3 className="empty-title">{busca ? 'Nenhum resultado encontrado' : 'Nenhum usuário cadastrado ainda'}</h3>
+                <p className="empty-desc">{busca ? 'Tente outro termo de busca.' : 'Vá até Cadastro para adicionar o primeiro usuário.'}</p>
                 {!busca && <Link to="/cadastro" className="btn btn-primary">Cadastrar usuário</Link>}
               </div>
             ) : (
@@ -90,10 +92,10 @@ export default function Listagem() {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Nome</th>
-                      <th>E-mail</th>
-                      <th>Cargo</th>
-                      <th>Departamento</th>
+                      <th className="th-sort" onClick={() => toggleOrdenacao('nome')}>Nome{getIcone('nome')}</th>
+                      <th className="th-sort" onClick={() => toggleOrdenacao('email')}>E-mail{getIcone('email')}</th>
+                      <th className="th-sort" onClick={() => toggleOrdenacao('cargo')}>Cargo{getIcone('cargo')}</th>
+                      <th className="th-sort" onClick={() => toggleOrdenacao('departamento')}>Departamento{getIcone('departamento')}</th>
                       <th>Cadastrado em</th>
                       <th>Ação</th>
                     </tr>
@@ -113,23 +115,17 @@ export default function Listagem() {
                         <td>{u.departamento || <span className="col-idx">—</span>}</td>
                         <td className="col-date">{u.criadoEm}</td>
                         <td>
-                          {confirmDelete === u.id ? (
-                            <div className="confirm-row">
-                              <button
-                                className="btn-danger"
-                                onClick={() => { removerUsuario(u.id); setConfirmDelete(null) }}
-                              >
-                                Sim
-                              </button>
-                              <button className="btn-cancel" onClick={() => setConfirmDelete(null)}>
-                                Não
-                              </button>
-                            </div>
-                          ) : (
-                            <button className="btn-remove" onClick={() => setConfirmDelete(u.id)}>
-                              ✕
-                            </button>
-                          )}
+                          <div className="acoes-row">
+                            <Link to={`/editar/${u.id}`} className="btn-edit" title="Editar">✎</Link>
+                            {confirmDelete === u.id ? (
+                              <div className="confirm-row">
+                                <button className="btn-danger" onClick={() => { removerUsuario(u.id); setConfirmDelete(null) }}>Sim</button>
+                                <button className="btn-cancel" onClick={() => setConfirmDelete(null)}>Não</button>
+                              </div>
+                            ) : (
+                              <button className="btn-remove" onClick={() => setConfirmDelete(u.id)}>✕</button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -142,41 +138,27 @@ export default function Listagem() {
 
         {aba === 'api' && (
           <div>
-            {loadingPosts && (
-              <div className="loading-state">
-                <div className="spinner" />
-                <p>Carregando posts da API...</p>
-              </div>
-            )}
-            {errorPosts && (
-              <div className="error-state">
-                <p>⚠ {errorPosts}</p>
-                <button className="btn btn-ghost" onClick={buscarPosts}>Tentar novamente</button>
-              </div>
-            )}
+            {loadingPosts && <div className="loading-state"><div className="spinner" /><p>Carregando posts da API...</p></div>}
+            {errorPosts && <div className="error-state"><p>⚠ {errorPosts}</p><button className="btn btn-ghost" onClick={buscarPosts}>Tentar novamente</button></div>}
             {!loadingPosts && !errorPosts && (
-              <>
-                {postsFiltrados.length === 0 ? (
-                  <div className="empty-state">
-                    <div className="empty-icon">🔍</div>
-                    <h3 className="empty-title">Nenhum post encontrado</h3>
-                    <p className="empty-desc">Tente outro termo de busca.</p>
-                  </div>
-                ) : (
-                  <div className="posts-grid">
-                    {postsFiltrados.map((post) => (
-                      <article key={post.id} className="post-card">
-                        <div className="post-id">#{post.id}</div>
-                        <h3 className="post-title">{post.title}</h3>
-                        <p className="post-body">{post.body}</p>
-                        <div className="post-footer">
-                          <span className="post-user">Usuário {post.userId}</span>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                )}
-              </>
+              postsFiltrados.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">🔍</div>
+                  <h3 className="empty-title">Nenhum post encontrado</h3>
+                  <p className="empty-desc">Tente outro termo de busca.</p>
+                </div>
+              ) : (
+                <div className="posts-grid">
+                  {postsFiltrados.map((post) => (
+                    <article key={post.id} className="post-card">
+                      <div className="post-id">#{post.id}</div>
+                      <h3 className="post-title">{post.title}</h3>
+                      <p className="post-body">{post.body}</p>
+                      <div className="post-footer"><span className="post-user">Usuário {post.userId}</span></div>
+                    </article>
+                  ))}
+                </div>
+              )
             )}
           </div>
         )}
